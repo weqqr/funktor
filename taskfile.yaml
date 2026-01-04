@@ -1,0 +1,10 @@
+version: 3
+tasks:
+  protocol:
+    cmds:
+      - task: wl-gen
+        vars:
+          INPUT: protocols/wayland.xml
+
+  wl-gen:
+    - cmd: go run ./cmd/wl-gen {{.INPUT}} pkg/wlproto
