@@ -18,10 +18,19 @@ type TemplateInput struct {
 }
 
 func generateSource(input TemplateInput) ([]byte, error) {
+	for i := range input.Interface.Requests {
+		input.Interface.Requests[i].Opcode = i
+	}
+
+	for i := range input.Interface.Events {
+		input.Interface.Events[i].Opcode = i
+	}
+
 	tmpl := template.New("")
 	tmpl = tmpl.Funcs(template.FuncMap{
 		"comment":    comment,
 		"pascalCase": pascalCase,
+		"concat":     concat,
 	})
 	tmpl = template.Must(tmpl.Parse(sourceTemplate))
 
@@ -58,4 +67,8 @@ func pascalCase(input string) string {
 		}
 	}
 	return strings.Join(words, "")
+}
+
+func concat(a, b string) string {
+	return a + b
 }

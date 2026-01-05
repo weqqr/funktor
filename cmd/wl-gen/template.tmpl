@@ -6,9 +6,13 @@
 
 package {{ .Interface.Name }}
 
+//
+// Enums
+//
+
 {{ range .Interface.Enums }}
 {{ $typeName := .Name | pascalCase }}
-{{ .Description | comment -}}
+{{ .Description | comment }}
 type {{ $typeName }} uint32
 
 const (
@@ -25,5 +29,43 @@ func (v {{ $typeName }}) String() string {
     }
 
     return "unknown"
+}
+{{ end }}
+
+//
+// Requests
+//
+
+{{ range .Interface.Requests }}
+{{ $typeName := concat .Name "_request" | pascalCase }}
+{{ .Description | comment }}
+type {{ $typeName }} struct {
+{{- range .Args }}
+    {{ .Summary | comment }}
+    {{ .Name | pascalCase }} uint32
+{{ end -}}
+}
+
+func (*{{ $typeName }}) Opcode() uint16 {
+    return {{ .Opcode }}
+}
+{{ end }}
+
+//
+// Events
+//
+
+{{ range .Interface.Events }}
+{{ $typeName := concat .Name "_event" | pascalCase }}
+{{ .Description | comment }}
+type {{ $typeName }} struct {
+{{- range .Args }}
+    {{ .Summary | comment }}
+    {{ .Name | pascalCase }} uint32
+{{ end -}}
+}
+
+func (*{{ $typeName }}) Opcode() uint16 {
+    return {{ .Opcode }}
 }
 {{ end }}

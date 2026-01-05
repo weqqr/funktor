@@ -9,8 +9,10 @@ type Protocol struct {
 }
 
 type Interface struct {
-	Name  string `xml:"name,attr"`
-	Enums []Enum `xml:"enum"`
+	Name     string    `xml:"name,attr"`
+	Enums    []Enum    `xml:"enum"`
+	Requests []Request `xml:"request"`
+	Events   []Event   `xml:"event"`
 }
 
 type Enum struct {
@@ -22,6 +24,27 @@ type Enum struct {
 type Entry struct {
 	Name  string `xml:"name,attr"`
 	Value string `xml:"value,attr"`
+}
+
+type Request struct {
+	Opcode      int    `xml:"-"` // Used by the generator
+	Name        string `xml:"name,attr"`
+	Description string `xml:"description"`
+	Args        []Arg  `xml:"arg"`
+}
+
+type Event struct {
+	Opcode      int    `xml:"-"` // Used by the generator
+	Name        string `xml:"name,attr"`
+	Description string `xml:"description"`
+	Args        []Arg  `xml:"arg"`
+}
+
+type Arg struct {
+	Name      string `xml:"name,attr"`
+	Type      string `xml:"type,attr"`
+	Interface string `xml:"interface,attr"`
+	Summary   string `xml:"summary,attr"`
 }
 
 func parseProtocolXML(input []byte) (Protocol, error) {
